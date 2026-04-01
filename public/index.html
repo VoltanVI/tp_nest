@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TP Chat - Connectez-vous</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <div id="loginScreen" class="screen active">
+      <div class="auth-container">
+        <div class="auth-box">
+          <div class="auth-header">
+            <div class="logo">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <h1>TP Chat</h1>
+            <p class="subtitle">Connectez-vous pour continuer</p>
+          </div>
+          
+          <form id="loginForm" class="auth-form">
+            <div class="form-group">
+              <label for="loginUsername">Nom d'utilisateur</label>
+              <input 
+                type="text" 
+                id="loginUsername" 
+                placeholder="Entrez votre nom d'utilisateur" 
+                required
+                autocomplete="username"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="loginPassword">Mot de passe</label>
+              <input 
+                type="password" 
+                id="loginPassword" 
+                placeholder="Entrez votre mot de passe" 
+                required
+                autocomplete="current-password"
+              >
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+            
+            <div class="auth-footer">
+              <p>Pas encore de compte ? <a href="#" id="showRegister">Créer un compte</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="registerScreen" class="screen">
+      <div class="auth-container">
+        <div class="auth-box">
+          <div class="auth-header">
+            <div class="logo">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <h1>Créer un compte</h1>
+          </div>
+          
+          <form id="registerForm" class="auth-form">
+            <div class="form-group">
+              <label for="registerUsername">Nom d'utilisateur</label>
+              <input 
+                type="text" 
+                id="registerUsername" 
+                placeholder="Choisissez un nom d'utilisateur" 
+                required
+                autocomplete="username"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="registerEmail">Email</label>
+              <input 
+                type="email" 
+                id="registerEmail" 
+                placeholder="votre@email.com" 
+                required
+                autocomplete="email"
+              >
+            </div>
+            
+            <div class="form-group">
+              <label for="registerPassword">Mot de passe</label>
+              <input 
+                type="password" 
+                id="registerPassword" 
+                placeholder="Minimum 6 caractères" 
+                required
+                autocomplete="new-password"
+                minlength="6"
+              >
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">Créer mon compte</button>
+            
+            <div class="auth-footer">
+              <p>Déjà un compte ? <a href="#" id="showLogin">Se connecter</a></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="chatScreen" class="screen">
+      <div class="main-layout">
+        <aside class="sidebar">
+          <div class="sidebar-header">
+            <div class="logo-small">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <h2>SocialChat</h2>
+          </div>
+          
+          <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-view="chat">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              <span>Chat</span>
+            </a>
+            <a href="#" class="nav-item" data-view="profile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <span>Profil</span>
+            </a>
+          </nav>
+          
+          <div class="sidebar-footer">
+            <div class="user-info">
+              <div class="user-avatar" id="sidebarAvatar"></div>
+              <div class="user-details">
+                <div class="user-name" id="sidebarUsername"></div>
+                <div class="user-status">En ligne</div>
+              </div>
+            </div>
+            <button class="btn-icon" id="logoutBtn" title="Déconnexion">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          </div>
+        </aside>
+
+        <main class="main-content">
+          <div id="chatView" class="view active">
+            <div class="chat-header">
+              <div class="header-info">
+                <h2>💬 Chat Général</h2>
+                <span class="status" id="connectionStatus">
+                  <span class="status-dot"></span>
+                  Connecté
+                </span>
+              </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+              <div class="messages-wrapper" id="messagesWrapper"></div>
+              <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <span class="typing-text"></span>
+                <span class="typing-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </div>
+            </div>
+
+            <div class="input-container">
+              <form id="messageForm">
+                <div class="input-wrapper">
+                  <input 
+                    type="text" 
+                    id="messageInput" 
+                    placeholder="Tapez votre message..." 
+                    autocomplete="off"
+                    required
+                  >
+                  <button type="submit" class="btn btn-send">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div id="profileView" class="view">
+            <div class="profile-container">
+              <div class="profile-header">
+                <h2>Mon Profil</h2>
+              </div>
+              
+              <div class="profile-content">
+                <div class="profile-card">
+                  <div class="profile-avatar-large" id="profileAvatar"></div>
+                  <h3 id="profileUsername"></h3>
+                  <p class="profile-email" id="profileEmail"></p>
+                  <span class="profile-badge">Membre actif</span>
+                </div>
+                
+                <div class="profile-stats">
+                  <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-info">
+                      <div class="stat-value" id="messageCount">0</div>
+                      <div class="stat-label">Messages envoyés</div>
+                    </div>
+                  </div>
+                  
+                  <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                      <div class="stat-value" id="memberSince">-</div>
+                      <div class="stat-label">Membre depuis</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="profile-info">
+                  <h4>Informations du compte</h4>
+                  <div class="info-item">
+                    <span class="info-label">Nom d'utilisateur</span>
+                    <span class="info-value" id="profileUsernameInfo"></span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value" id="profileEmailInfo"></span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">ID Utilisateur</span>
+                    <span class="info-value" id="profileId"></span>
+                  </div>
+                </div>
+
+                <div class="profile-edit">
+                  <h4>✏️ Modifier mon profil</h4>
+                  <form id="editProfileForm" class="edit-form">
+                    <div class="form-group">
+                      <label for="editUsername">Nom d'utilisateur</label>
+                      <input 
+                        type="text" 
+                        id="editUsername" 
+                        placeholder="Votre nom d'utilisateur"
+                        required
+                      >
+                    </div>
+                    
+                    <div class="form-group">
+                      <label for="editColor">Couleur de mon avatar</label>
+                      <div class="color-picker-wrapper">
+                        <input 
+                          type="color" 
+                          id="editColor" 
+                          value="#1877f2"
+                        >
+                        <span class="color-preview" id="colorPreview">#1877f2</span>
+                      </div>
+                      <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+                        Cette couleur sera visible par tous les utilisateurs dans le chat
+                      </small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">💾 Enregistrer les modifications</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
