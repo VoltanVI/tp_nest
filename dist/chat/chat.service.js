@@ -68,6 +68,10 @@ let ChatService = ChatService_1 = class ChatService {
         this.logger.log(`Reaction ${emoji} toggled on message ${messageId} by ${username}`);
         return updatedMessage;
     }
+    async updateUserColor(username, newColor) {
+        const result = await this.messageModel.updateMany({ username }, { $set: { userColor: newColor } });
+        this.logger.log(`Updated color for ${result.modifiedCount} messages from ${username}`);
+    }
 };
 exports.ChatService = ChatService;
 exports.ChatService = ChatService = ChatService_1 = __decorate([

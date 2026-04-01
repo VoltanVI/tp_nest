@@ -16,10 +16,16 @@ exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const update_user_dto_1 = require("./dto/update-user.dto");
+const chat_service_1 = require("../chat/chat.service");
+const chat_gateway_1 = require("../chat/chat.gateway");
 let UsersController = class UsersController {
     usersService;
-    constructor(usersService) {
+    chatService;
+    chatGateway;
+    constructor(usersService, chatService, chatGateway) {
         this.usersService = usersService;
+        this.chatService = chatService;
+        this.chatGateway = chatGateway;
     }
     async findAll() {
         return this.usersService.findAll();
@@ -29,6 +35,10 @@ let UsersController = class UsersController {
     }
     async update(id, updateUserDto) {
         const user = await this.usersService.update(id, updateUserDto);
+        if (updateUserDto.color) {
+            await this.chatService.updateUserColor(user.username, updateUserDto.color);
+            this.chatGateway.notifyColorUpdate(user.username, updateUserDto.color);
+        }
         return {
             user: {
                 id: user._id,
@@ -63,6 +73,8 @@ __decorate([
 ], UsersController.prototype, "update", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    __metadata("design:paramtypes", [users_service_1.UsersService,
+        chat_service_1.ChatService,
+        chat_gateway_1.ChatGateway])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

@@ -73,6 +73,12 @@ let ChatGateway = ChatGateway_1 = class ChatGateway {
             return { success: false, error: error.message };
         }
     }
+    notifyColorUpdate(username, newColor) {
+        this.server.emit('userColorUpdated', {
+            username,
+            newColor,
+        });
+    }
 };
 exports.ChatGateway = ChatGateway;
 __decorate([

@@ -19,6 +19,7 @@ exports.ChatModule = ChatModule = __decorate([
     (0, common_1.Module)({
         imports: [mongoose_1.MongooseModule.forFeature([{ name: message_schema_1.Message.name, schema: message_schema_1.MessageSchema }])],
         providers: [chat_gateway_1.ChatGateway, chat_service_1.ChatService],
+        exports: [chat_service_1.ChatService, chat_gateway_1.ChatGateway],
     })
 ], ChatModule);
 //# sourceMappingURL=chat.module.js.map

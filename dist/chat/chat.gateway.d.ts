@@ -31,4 +31,5 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
         success: boolean;
         error: any;
     }>;
+    notifyColorUpdate(username: string, newColor: string): void;
 }

@@ -63,4 +63,12 @@ export class ChatService {
     this.logger.log(`Reaction ${emoji} toggled on message ${messageId} by ${username}`);
     return updatedMessage;
   }
+
+  async updateUserColor(username: string, newColor: string): Promise<void> {
+    const result = await this.messageModel.updateMany(
+      { username },
+      { $set: { userColor: newColor } }
+    );
+    this.logger.log(`Updated color for ${result.modifiedCount} messages from ${username}`);
+  }
 }

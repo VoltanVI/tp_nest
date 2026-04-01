@@ -111,4 +111,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return { success: false, error: error.message };
     }
   }
+
+  notifyColorUpdate(username: string, newColor: string) {
+    this.server.emit('userColorUpdated', {
+      username,
+      newColor,
+    });
+  }
 }

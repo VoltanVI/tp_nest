@@ -7,4 +7,5 @@ export declare class ChatService {
     createMessage(content: string, username: string, userColor?: string): Promise<Message>;
     getAllMessages(): Promise<Message[]>;
     toggleReaction(messageId: string, emoji: string, username: string): Promise<Message>;
+    updateUserColor(username: string, newColor: string): Promise<void>;
 }

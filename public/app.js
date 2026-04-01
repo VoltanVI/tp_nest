@@ -221,6 +221,10 @@ function initializeChat() {
   socket.on('reactionUpdated', (data) => {
     updateMessageReactions(data.messageId, data.reactions);
   });
+
+  socket.on('userColorUpdated', (data) => {
+    updateUserMessagesColor(data.username, data.newColor);
+  });
 }
 
 function updateTypingIndicator() {
@@ -349,6 +353,24 @@ function updateMessageReactions(messageId, reactions) {
       reactionsContainer.outerHTML = renderReactions(reactions, messageId);
     }
   }
+}
+
+function updateUserMessagesColor(username, newColor) {
+  const messages = document.querySelectorAll('.message');
+  messages.forEach(messageDiv => {
+    const usernameElement = messageDiv.querySelector('.message-username');
+    if (usernameElement && usernameElement.textContent === username) {
+      const avatar = messageDiv.querySelector('.message-avatar');
+      const bubble = messageDiv.querySelector('.message-bubble');
+      
+      if (avatar) {
+        avatar.style.background = newColor;
+      }
+      if (bubble) {
+        bubble.style.background = newColor;
+      }
+    }
+  });
 }
 
 function updateUserInfo() {
