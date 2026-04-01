@@ -715,7 +715,7 @@ input:focus {
 
 .profile-badge {
   display: inline-block;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: var(--primary);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 20px;
