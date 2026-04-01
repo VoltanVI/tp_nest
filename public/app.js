@@ -480,7 +480,7 @@ function initializeProfileForm() {
           initializeChat();
         }
         
-        showToast('✅ Profil mis à jour avec succès !', 'success');
+        showToast('Profil mis à jour avec succès !', 'success');
       } else {
         showToast(data.message || 'Erreur lors de la mise à jour', 'error');
       }
