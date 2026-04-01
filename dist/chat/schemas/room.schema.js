@@ -9,42 +9,36 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MessageSchema = exports.Message = void 0;
+exports.RoomSchema = exports.Room = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
-const mongoose_2 = require("mongoose");
-let Message = class Message {
+let Room = class Room {
     _id;
-    content;
-    username;
-    userColor;
-    roomId;
-    reactions;
+    name;
+    creator;
+    members;
     createdAt;
     updatedAt;
 };
-exports.Message = Message;
+exports.Room = Room;
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], Message.prototype, "content", void 0);
+], Room.prototype, "name", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], Message.prototype, "username", void 0);
+], Room.prototype, "creator", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: '#1877f2' }),
-    __metadata("design:type", String)
-], Message.prototype, "userColor", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: 'Room', default: null }),
-    __metadata("design:type", Object)
-], Message.prototype, "roomId", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ type: [{ emoji: String, users: [String] }], default: [] }),
+    (0, mongoose_1.Prop)({
+        type: [
+            { username: String, hasHistoryAccess: Boolean, joinedAt: Date },
+        ],
+        default: [],
+    }),
     __metadata("design:type", Array)
-], Message.prototype, "reactions", void 0);
-exports.Message = Message = __decorate([
+], Room.prototype, "members", void 0);
+exports.Room = Room = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
-], Message);
-exports.MessageSchema = mongoose_1.SchemaFactory.createForClass(Message);
-//# sourceMappingURL=message.schema.js.map
+], Room);
+exports.RoomSchema = mongoose_1.SchemaFactory.createForClass(Room);
+//# sourceMappingURL=room.schema.js.map

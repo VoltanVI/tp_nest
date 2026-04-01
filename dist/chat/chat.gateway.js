@@ -37,26 +37,59 @@ let ChatGateway = ChatGateway_1 = class ChatGateway {
         this.logger.log(`${data.username} joined the chat`);
         const messages = await this.chatService.getAllMessages();
         client.emit('getMessages', messages);
+        const rooms = await this.chatService.getRoomsByUser(data.username);
+        for (const room of rooms) {
+            client.join(`room:${room._id}`);
+        }
+        client.emit('roomsList', rooms);
         return { success: true };
     }
     async handleMessage(data, client) {
         const username = client.data.username || 'Anonymous';
         const userColor = client.data.userColor || '#1877f2';
-        const message = await this.chatService.createMessage(data.content, username, userColor);
-        this.server.emit('newMessage', message);
+        if (data.roomId) {
+            const isMember = await this.chatService.isRoomMember(data.roomId, username);
+            if (!isMember) {
+                return { success: false, error: 'Not a member of this room' };
+            }
+        }
+        const message = await this.chatService.createMessage(data.content, username, userColor, data.roomId);
+        if (data.roomId) {
+            this.server.to(`room:${data.roomId}`).emit('newMessage', message);
+        }
+        else {
+            this.server.emit('newMessage', message);
+        }
         return message;
     }
-    async handleGetMessages() {
+    async handleGetMessages(data = {}, client) {
+        const username = client.data.username || 'Anonymous';
+        if (data?.roomId) {
+            const memberAccess = await this.chatService.getMemberAccess(data.roomId, username);
+            if (!memberAccess) {
+                client.emit('getMessages', []);
+                return;
+            }
+            const messages = await this.chatService.getRoomMessagesForMember(data.roomId, username);
+            client.emit('getMessages', messages);
+            return;
+        }
         const messages = await this.chatService.getAllMessages();
         this.logger.log(`Sending ${messages.length} messages to client`);
-        return messages;
+        client.emit('getMessages', messages);
     }
     handleTyping(data, client) {
         const username = client.data.username || 'Anonymous';
-        client.broadcast.emit('userTyping', {
+        const payload = {
             username,
             isTyping: data.isTyping,
-        });
+        };
+        if (data.roomId) {
+            client.to(`room:${data.roomId}`).emit('userTyping', payload);
+        }
+        else {
+            client.broadcast.emit('userTyping', payload);
+        }
     }
     async handleToggleReaction(data, client) {
         const username = client.data.username || 'Anonymous';
@@ -70,6 +103,85 @@ let ChatGateway = ChatGateway_1 = class ChatGateway {
         }
         catch (error) {
             this.logger.error(`Error toggling reaction: ${error.message}`);
+            return { success: false, error: error.message };
+        }
+    }
+    async handleCreateRoom(data, client) {
+        const creator = client.data.username || 'Anonymous';
+        try {
+            const room = await this.chatService.createRoom(data.name, creator, data.members);
+            client.join(`room:${room._id}`);
+            const allMemberUsernames = room.members.map((m) => m.username);
+            const sockets = await this.server.fetchSockets();
+            for (const s of sockets) {
+                if (allMemberUsernames.includes(s.data.username) &&
+                    s.id !== client.id) {
+                    s.join(`room:${room._id}`);
+                    s.emit('roomInvite', room);
+                }
+            }
+            client.emit('roomCreated', room);
+            return { success: true, room };
+        }
+        catch (error) {
+            this.logger.error(`Error creating room: ${error.message}`);
+            return { success: false, error: error.message };
+        }
+    }
+    async handleGetRooms(client) {
+        const username = client.data.username || 'Anonymous';
+        const rooms = await this.chatService.getRoomsByUser(username);
+        return rooms;
+    }
+    async handleJoinRoom(data, client) {
+        const username = client.data.username || 'Anonymous';
+        const isMember = await this.chatService.isRoomMember(data.roomId, username);
+        if (!isMember) {
+            return { success: false, error: 'Not a member of this room' };
+        }
+        client.join(`room:${data.roomId}`);
+        const messages = await this.chatService.getRoomMessagesForMember(data.roomId, username);
+        client.emit('getMessages', messages);
+        return { success: true };
+    }
+    async handleDeleteRoom(data, client) {
+        const username = client.data.username || 'Anonymous';
+        try {
+            const room = await this.chatService.getRoomById(data.roomId);
+            if (!room)
+                return { success: false, error: 'Room not found' };
+            await this.chatService.deleteRoom(data.roomId, username);
+            this.server.to(`room:${data.roomId}`).emit('roomDeleted', {
+                roomId: data.roomId,
+                roomName: room.name,
+            });
+            const sockets = await this.server.fetchSockets();
+            for (const s of sockets) {
+                s.leave(`room:${data.roomId}`);
+            }
+            return { success: true };
+        }
+        catch (error) {
+            this.logger.error(`Error deleting room: ${error.message}`);
+            return { success: false, error: error.message };
+        }
+    }
+    async handleAddMembers(data, client) {
+        const username = client.data.username || 'Anonymous';
+        try {
+            const { room: updatedRoom, addedUsernames } = await this.chatService.addMembersToRoom(data.roomId, username, data.members);
+            const sockets = await this.server.fetchSockets();
+            for (const s of sockets) {
+                if (addedUsernames.includes(s.data.username)) {
+                    s.join(`room:${data.roomId}`);
+                    s.emit('roomInvite', updatedRoom);
+                }
+            }
+            this.server.to(`room:${data.roomId}`).emit('roomUpdated', updatedRoom);
+            return { success: true, room: updatedRoom };
+        }
+        catch (error) {
+            this.logger.error(`Error adding members: ${error.message}`);
             return { success: false, error: error.message };
         }
     }
@@ -103,8 +215,10 @@ __decorate([
 ], ChatGateway.prototype, "handleMessage", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('getMessages'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleGetMessages", null);
 __decorate([
@@ -123,6 +237,45 @@ __decorate([
     __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "handleToggleReaction", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('createRoom'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleCreateRoom", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('getRooms'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleGetRooms", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('joinRoom'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleJoinRoom", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('deleteRoom'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleDeleteRoom", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('addMembers'),
+    __param(0, (0, websockets_1.MessageBody)()),
+    __param(1, (0, websockets_1.ConnectedSocket)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], ChatGateway.prototype, "handleAddMembers", null);
 exports.ChatGateway = ChatGateway = ChatGateway_1 = __decorate([
     (0, websockets_1.WebSocketGateway)({
         cors: {

@@ -832,6 +832,308 @@ input:focus {
   font-weight: 600;
 }
 
+/* Rooms Section */
+.rooms-section {
+  padding: 0.5rem 0;
+}
+
+.rooms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+}
+
+.rooms-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.btn-icon-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-icon-small:hover {
+  background: var(--primary);
+}
+
+.btn-icon-small:hover svg {
+  stroke: white;
+}
+
+.btn-icon-small svg {
+  stroke: var(--text-secondary);
+}
+
+.rooms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.room-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.room-item:hover {
+  background: var(--bg-secondary);
+}
+
+.room-item.active {
+  background: var(--primary);
+  color: white;
+}
+
+.room-item.active .room-meta {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.room-item.active .room-icon svg {
+  stroke: white;
+}
+
+.room-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.room-item.active .room-icon {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.room-icon svg {
+  stroke: var(--text-secondary);
+}
+
+.room-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.room-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.room-meta {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+/* Header Room Info */
+.header-room-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.room-members-count {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.btn-back-general {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-back-general:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.btn-room-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add-member {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.btn-add-member:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.btn-add-member:hover svg {
+  stroke: white;
+}
+
+.btn-delete-room {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.btn-delete-room:hover {
+  background: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
+
+.btn-delete-room:hover svg {
+  stroke: white;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px var(--shadow-lg);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Member Tags */
+.member-input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.member-input-wrapper input {
+  flex: 1;
+}
+
+.members-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.member-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--primary);
+  color: white;
+  padding: 0.3rem 0.6rem;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.remove-member {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.remove-member:hover {
+  opacity: 1;
+}
+
+/* Checkbox */
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+
 /* Toast */
 .toast {
   position: fixed;

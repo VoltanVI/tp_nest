@@ -21,6 +21,9 @@ export class Message {
   @Prop({ default: '#1877f2' })
   userColor: string;
 
+  @Prop({ type: Types.ObjectId, ref: 'Room', default: null })
+  roomId: Types.ObjectId | null;
+
   @Prop({ type: [{ emoji: String, users: [String] }], default: [] })
   reactions: Reaction[];
 

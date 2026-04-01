@@ -16,10 +16,17 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
     }>;
     handleMessage(data: {
         content: string;
-    }, client: Socket): Promise<import("./schemas/message.schema").Message>;
-    handleGetMessages(): Promise<import("./schemas/message.schema").Message[]>;
+        roomId?: string;
+    }, client: Socket): Promise<import("./schemas/message.schema").Message | {
+        success: boolean;
+        error: string;
+    }>;
+    handleGetMessages(data: {
+        roomId?: string;
+    } | undefined, client: Socket): Promise<void>;
     handleTyping(data: {
         isTyping: boolean;
+        roomId?: string;
     }, client: Socket): void;
     handleToggleReaction(data: {
         messageId: string;
@@ -30,6 +37,55 @@ export declare class ChatGateway implements OnGatewayConnection, OnGatewayDiscon
     } | {
         success: boolean;
         error: any;
+    }>;
+    handleCreateRoom(data: {
+        name: string;
+        members: {
+            username: string;
+            hasHistoryAccess: boolean;
+        }[];
+    }, client: Socket): Promise<{
+        success: boolean;
+        room: import("./schemas/room.schema").Room;
+        error?: undefined;
+    } | {
+        success: boolean;
+        error: any;
+        room?: undefined;
+    }>;
+    handleGetRooms(client: Socket): Promise<import("./schemas/room.schema").Room[]>;
+    handleJoinRoom(data: {
+        roomId: string;
+    }, client: Socket): Promise<{
+        success: boolean;
+        error: string;
+    } | {
+        success: boolean;
+        error?: undefined;
+    }>;
+    handleDeleteRoom(data: {
+        roomId: string;
+    }, client: Socket): Promise<{
+        success: boolean;
+        error?: undefined;
+    } | {
+        success: boolean;
+        error: any;
+    }>;
+    handleAddMembers(data: {
+        roomId: string;
+        members: {
+            username: string;
+            hasHistoryAccess: boolean;
+        }[];
+    }, client: Socket): Promise<{
+        success: boolean;
+        room: import("./schemas/room.schema").Room;
+        error?: undefined;
+    } | {
+        success: boolean;
+        error: any;
+        room?: undefined;
     }>;
     notifyColorUpdate(username: string, newColor: string): void;
 }

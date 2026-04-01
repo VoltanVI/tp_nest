@@ -9,6 +9,7 @@ export declare class Message {
     content: string;
     username: string;
     userColor: string;
+    roomId: Types.ObjectId | null;
     reactions: Reaction[];
     createdAt?: Date;
     updatedAt?: Date;
@@ -60,6 +61,15 @@ export declare const MessageSchema: import("mongoose").Schema<Message, import("m
         id: string;
     }> | undefined;
     userColor?: import("mongoose").SchemaDefinitionProperty<string, Message, Document<unknown, {}, Message, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Message & Required<{
+        _id: Types.ObjectId;
+    }> & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    roomId?: import("mongoose").SchemaDefinitionProperty<Types.ObjectId | null, Message, Document<unknown, {}, Message, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Message & Required<{
         _id: Types.ObjectId;
